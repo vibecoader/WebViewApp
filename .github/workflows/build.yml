@@ -26,16 +26,12 @@ jobs:
       - name: Install Build Tools
         run: sdkmanager "platforms;android-34" "build-tools;34.0.0"
 
-      - name: Download Gradle Wrapper
+      - name: Setup Gradle
         run: |
           mkdir -p gradle/wrapper
-          curl -L -o gradle/wrapper/gradle-wrapper.jar https://github.com/gradle/gradle/raw/v8.4.0/gradle/wrapper/gradle-wrapper.jar
-          echo "distributionBase=GRADLE_USER_HOME" > gradle/wrapper/gradle-wrapper.properties
-          echo "distributionPath=wrapper/dists" >> gradle/wrapper/gradle-wrapper.properties
-          echo "distributionUrl=https\://services.gradle.org/distributions/gradle-8.4-bin.zip" >> gradle/wrapper/gradle-wrapper.properties
-          echo "zipStoreBase=GRADLE_USER_HOME" >> gradle/wrapper/gradle-wrapper.properties
-          echo "zipStorePath=wrapper/dists" >> gradle/wrapper/gradle-wrapper.properties
-          printf '#!/bin/sh\nexec java -jar gradle/wrapper/gradle-wrapper.jar "$@"' > gradlew
+          wget -q https://services.gradle.org/distributions/gradle-8.4-bin.zip -O /tmp/gradle.zip
+          unzip -q /tmp/gradle.zip -d /tmp/gradle
+          /tmp/gradle/gradle-8.4/bin/gradle wrapper --gradle-version 8.4
           chmod +x gradlew
 
       - name: Build APK
