@@ -28,7 +28,7 @@ jobs:
 
       - name: Make gradlew
         run: |
-          gradle wrapper
+          gradle wrapper --gradle-version 8.4
           chmod +x gradlew
 
       - name: Build APK
