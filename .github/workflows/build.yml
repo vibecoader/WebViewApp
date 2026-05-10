@@ -17,12 +17,22 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v3
+      - name: Install Android SDK
+        uses: android-actions/setup-android@v3
 
-      - name: Build Debug APK
-        run: gradle assembleDebug
-        working-directory: .
+      - name: Accept Licenses
+        run: yes | sdkmanager --licenses || true
+
+      - name: Install Build Tools
+        run: sdkmanager "platforms;android-34" "build-tools;34.0.0"
+
+      - name: Make gradlew
+        run: |
+          gradle wrapper
+          chmod +x gradlew
+
+      - name: Build APK
+        run: ./gradlew assembleDebug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
